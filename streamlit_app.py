@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[8]:
 
 
 import streamlit as st
@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import altair as alt
 from sklearn.preprocessing import StandardScaler
 import joblib
 from sklearn.metrics import mean_squared_error, r2_score
@@ -40,21 +41,38 @@ df_selected = df[features]
 scaler = StandardScaler()
 df_scaled = pd.DataFrame(scaler.fit_transform(df_selected), columns=features)
 
+# Allow users to input their data
+st.sidebar.subheader("Enter Your Data")
+user_data = {}
+for feature in features:
+    user_data[feature] = st.sidebar.number_input(f"Enter {feature}", value=0.0)
+
+# Convert user input to DataFrame
+user_df = pd.DataFrame([user_data])
+
+# Scale user input
+user_scaled = pd.DataFrame(scaler.transform(user_df), columns=features)
+
 # Prediction using the linear regression model
 st.subheader("Linear Regression Model Prediction")
 
-# Make predictions
-predictions = loaded_model.predict(df_scaled)
-df["Predicted Income"] = predictions
-st.write(df[["income", "Predicted Income"]])
+# Make predictions for user input
+user_predictions = loaded_model.predict(user_scaled)
+
+# Add Predicted Income column to the DataFrame for the scatter plot
+df_scatter = df.copy()
+df_scatter['Predicted Income'] = loaded_model.predict(df_scaled)
 
 # Scatter plot of predicted vs. actual income
-plt.figure(figsize=(8, 6))
-sns.scatterplot(x='income', y='Predicted Income', data=df)
-plt.title('Predicted vs. Actual Income')
-plt.xlabel('Actual Income')
-plt.ylabel('Predicted Income')
-st.pyplot()
+st.subheader("Scatter Plot: Predicted vs. Actual Income")
+scatter_chart = alt.Chart(df_scatter, height=400, width=600).mark_circle().encode(
+    x='income',
+    y=alt.Y('Predicted Income', title='Predicted Income'),
+    color='income'
+).interactive()
+
+# Streamlit chart
+st.altair_chart(scatter_chart, use_container_width=True)
 
 # Model coefficients visualization
 st.subheader("Model Coefficients")
