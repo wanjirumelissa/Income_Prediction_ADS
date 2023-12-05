@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
+# In[9]:
 
 
 import streamlit as st
@@ -13,6 +13,11 @@ import altair as alt
 from sklearn.preprocessing import StandardScaler
 import joblib
 from sklearn.metrics import mean_squared_error, r2_score
+import os
+
+# Print current working directory and list of files
+print("Current Working Directory:", os.getcwd())
+print("Files in Current Directory:", os.listdir())
 
 # Suppress the warning related to st.pyplot()
 st.set_option('deprecation.showPyplotGlobalUse', False)
