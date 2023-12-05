@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[10]:
 
 
 import streamlit as st
@@ -33,8 +33,10 @@ st.title("Income Prediction Model Explorer")
 st.markdown("## Income Prediction Project\nPredicts income based on key features such as employment duration, car ownership, and more.")
 
 # Upload CSV data through Streamlit
-file_path = 'C:/Users/admin/Documents/Income_Prediction_ADS/dataset1.csv'
+file_path = 'dataset1.csv'
 df = pd.read_csv(file_path)
+
+file_path = os.path.join(os.getcwd(), 'dataset1.csv')
 
 # Display the first few rows of the DataFrame
 st.subheader("Dataset Preview")
